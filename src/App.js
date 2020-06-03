@@ -20,7 +20,7 @@ export default class extends Component {
   }
 
   getDataScore = async () => {
-    const url = `http://ftw-highscores.herokuapp.com/tictactoe-dev`;
+    const url = `https://ftw-highscores.herokuapp.com/tictactoe-dev`;
     let data = await fetch(url)
     let result = await data.json()
     console.log("REesul is: ", result)
@@ -47,20 +47,21 @@ export default class extends Component {
         {this.state.getData.map(elm => {
           return (
             <>
-              <h3>User name: {elm.player} - {elm.score} points</h3>
+              <h3>User name: {elm.player} - {elm.score} seconds</h3>
             </>
           )
           })
         }
-        {this.state.isLogIn ? <h3>Your Name: {this.state.userName}</h3> :
-          <FacebookLogin
-            autoLoad={true}
-            appId="659117181612632"
-            fields="name,email,picture"
-            callback={this.responseFacebook} />
+        {
+          this.state.isLogIn ? <h3>Your Name: {this.state.userName} - {this.state.score} seconds</h3> :
+            <FacebookLogin
+              autoLoad={true}
+              appId="659117181612632"
+              fields="name,email,picture"
+              callback={this.responseFacebook} 
+            />
         }
         <Board {...this.state} setTheState={this.setTheState} />
-        <div>Score: {this.state.score}</div>
       </div>
     )
   }
