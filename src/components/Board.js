@@ -1,12 +1,20 @@
 import React, { Component } from 'react'
 import Square from './Square'
 
+
+let isClicked = 0
+let startTime = 0
+let endTime = 0
+
 export default class Board extends Component {
     renderSquare = (num) => {
         return <Square id={num} boxClick={this.boxClick} value={this.props.squares[num]}/>
     }
-
     boxClick = (id) => {
+        if(isClicked === 0){
+            isClicked++
+            this.startTime = Date.now()
+        }
         console.log("Box Clicked!. Your ID: ", id)
         // change the value from null to "X" at the array index number ID
         let squaresFromApp = this.props.squares
@@ -20,14 +28,13 @@ export default class Board extends Component {
         this.props.setTheState({
             squares: squaresFromApp, 
             isXNext: !this.props.isXNext, 
-            history:[
-                ...this.props.history,
-                {
-                    squares: squaresFromApp, 
-                    isXNext: !this.props.isXNext, 
-                }
-            ]
         })
+
+        if(this.calculateWinner(squaresFromApp)){
+            this.endTime = Date.now()
+            this.props.setTheState({score: Math.floor((this.endTime - this.startTime)/1000)})
+        }
+    
     }
 
     calculateWinner = (squares) => {
@@ -44,11 +51,12 @@ export default class Board extends Component {
         for (let i = 0; i < lines.length; i++) {
             const [a, b, c] = lines[i]
             if (squares[a] && squares[b] === squares[a] && squares[c] === squares[a]) {
-              return squares[a]
+                return squares[a]
             }
         }
         return null
     }
+
 
     
     render() {
@@ -57,7 +65,9 @@ export default class Board extends Component {
         // status = `Next Player:  ${this.props.isXNext ? "X" : "O"}`
 
         if(winner){
-            status = 'Winner: ' + winner
+            status = 'Winner: ' + winner;
+           
+          
         }else{
             status = `Next Player: ${this.props.isXNext ? "X" : "O"}`
         }
