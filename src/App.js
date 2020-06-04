@@ -43,16 +43,10 @@ export default class extends Component {
 
   render() {
     return (
-      <div>
-        {this.state.getData.map(elm => {
-          return (
-            <>
-              <h3>User name: {elm.player} - {elm.score} seconds</h3>
-            </>
-          )
-          })
-        }
-        {
+      <div className="body">
+        <div className="board">
+          <Board {...this.state} setTheState={this.setTheState} />
+          {
           this.state.isLogIn ? <h3>Your Name: {this.state.userName} - {this.state.score} seconds</h3> :
             <FacebookLogin
               autoLoad={true}
@@ -60,8 +54,21 @@ export default class extends Component {
               fields="name,email,picture"
               callback={this.responseFacebook} 
             />
-        }
-        <Board {...this.state} setTheState={this.setTheState} />
+          }
+        </div>
+
+        <div className="score-board">
+          {
+            this.state.getData.map(elm => {
+              return (
+                <>
+                  <h3>Best Score: {Math.max(elm.score)}</h3>
+                  <h5>User name: {elm.player} - {elm.score} seconds</h5>
+                </>
+              )
+            })
+          }
+        </div>
       </div>
     )
   }
